@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Polyrhythm</title>
+    </head>
+    <body>
+        <canvas id="myCanvas" style="background-color:black"></canvas>
+        <script src = "sound.js"></script>
+        <script src ="track.js"></script>
+        <script src ="ball.js"></script>
+        <script>
+            const size = 700;
+            myCanvas.width = size;
+            myCanvas.height = size / 2;
+
+            // set the track to the middle of the screen
+            const trackCenter = {x: size / 2, y: size / 2};
+            const trackMinRadius = 60;
+            const trackStep = 15;
+            const ballRadius = 6;
+            const ballMinSpeed = 0.01;
+            const ballSpeedStep = -0.0001;
+
+            const soundFrequencies = [
+            1760, 1567.98, 1396.91, 1318.51, 1174.66, 1046.5, 987.77, 880,
+            783.99, 698.46, 659.25, 587.33, 523.25, 493.88, 440, 392, 349.23,
+            329.63, 293.66, 261.63
+            ];
+
+            tracks = [];
+            balls = [];
+            //if we want 20 pairs of tracks and balls
+            const N = 20;
+            // loop from 0 all the way to N
+            for (let i = 0; i < N; i++){
+                const trackRadius = trackMinRadius + i * trackStep;
+                const ballSpeed = ballMinSpeed + i * ballSpeedStep;
+                const ballSoundFrequency = soundFrequencies[i];
+                const hue = (i * 360) / N;
+                const track = new Track(trackCenter, trackRadius, hue);
+                const ball = new Ball(track, ballRadius, ballSpeed, ballSoundFrequency, hue);
+                tracks.push(track);
+                balls.push(ball);
+            }
+
+            const ctx = myCanvas.getContext("2d");
+
+            animate();
+
+            function animate(){
+                //clear the canvas
+                ctx.clearRect(0, 0, size, size)
+                // redraw the track and ball on each frame
+                tracks.forEach((track) => track.draw(ctx));
+                balls.forEach((ball) => ball.move());
+                balls.forEach((ball) => ball.draw(ctx));
+                requestAnimationFrame(animate);
+            }
+        </script>
+    </body>
+</html>
