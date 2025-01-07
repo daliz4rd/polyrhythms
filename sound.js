@@ -1,3 +1,4 @@
+
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
 function playSound (frequency = 440, duration = 2){
